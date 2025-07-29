@@ -59,33 +59,46 @@ export default function Home() {
     <>
       <Head>
         <title>Beatdown.ai – Your F3 Workout Assistant</title>
+        <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;700&display=swap" rel="stylesheet" />
       </Head>
-      <div className="min-h-screen bg-black text-green-400 p-4 font-mono">
-        <h1 className="text-xl mb-4">💪 Beatdown.ai</h1>
-        <p className="mb-2">Credits remaining: {credits}</p>
-        <div className="border border-green-600 p-2 mb-4 h-64 overflow-y-scroll">
-          {messages.map((msg, idx) => (
-            <div key={idx} className="mb-2">
-              <strong>{msg.role === 'user' ? 'You' : 'Beatdown.ai'}:</strong> {msg.content}
-            </div>
-          ))}
-          {loading && <div>Loading...</div>}
+      <div className="min-h-screen bg-neutral-900 text-white p-6 font-sans" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-3xl font-bold mb-2">💪 Beatdown.ai</h1>
+          <p className="text-sm text-gray-400 mb-4">Your AI assistant for F3 workouts. Credits remaining: <span className="font-bold">{credits}</span></p>
+
+          <div className="bg-neutral-800 rounded-lg p-4 h-96 overflow-y-auto shadow-inner mb-4 border border-neutral-700">
+            {messages.map((msg, idx) => (
+              <div key={idx} className="mb-3">
+                <span className="block font-semibold text-blue-300">{msg.role === 'user' ? 'You' : 'Beatdown.ai'}:</span>
+                <p className="ml-2 text-base text-white whitespace-pre-wrap">{msg.content}</p>
+              </div>
+            ))}
+            {loading && <div className="text-sm text-yellow-400">Thinking...</div>}
+          </div>
+
+          <div className="flex gap-2 items-center">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              className="flex-1 px-3 py-2 rounded border border-neutral-600 bg-neutral-800 text-white placeholder-gray-400"
+              placeholder="Ask me anything workout-related..."
+              onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+            />
+            <button
+              onClick={sendMessage}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition"
+            >
+              Send
+            </button>
+          </div>
+
+          <button
+            onClick={() => window.location.href = '/api/stripe-checkout'}
+            className="mt-4 text-green-400 underline hover:text-green-300"
+          >
+            💸 Buy More Credits
+          </button>
         </div>
-        <div className="flex gap-2">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            className="flex-1 px-2 py-1 border border-green-600 bg-black text-green-400"
-            placeholder="Type your workout question..."
-          />
-          <button onClick={sendMessage} className="bg-green-600 text-black px-4 py-1">Send</button>
-        </div>
-        <button
-          onClick={() => window.location.href = '/api/stripe-checkout'}
-          className="mt-4 underline"
-        >
-          💸 Buy More Credits
-        </button>
       </div>
     </>
   )
